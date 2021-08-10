@@ -1,0 +1,39 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: windows-latest
+
+stages:
+- stage: download_terraform
+  displayName: download Terraform from Hasicorp website
+  jobs:
+  - job:
+    steps:
+    - task: PowerShell@2
+      displayName: Execute PL-Install-Terraform.ps1
+      inputs:
+        filePath: '\scripts\PL-Install-Terraform\PL-Install-Terraform.ps1'
+        arguments: '-version latest'
+    - task: PowerShell@2
+      displayName: Terraform --version
+      inputs:
+        filePath: '.\terraform.exe --version'
+    - task: PowerShell@2
+      displayName: Terraform fmt
+      inputs:
+        filePath: '.\terraform.exe fmt'
+    - task: PowerShell@2
+      displayName: Terraform validate
+      inputs:
+        filePath: '.\terraform.exe validate'
+    - task: PowerShell@2
+      displayName: Terraform init
+      inputs:
+        filePath: '.\terraform.exe init'
+        arguments: -var-file="dev/main.tfvars"
