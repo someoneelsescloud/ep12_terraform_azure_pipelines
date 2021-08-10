@@ -24,7 +24,7 @@ stages:
     - task: PowerShell@2
       displayName: Terraform --version
       inputs:
-        filePath: '$(System.DefaultWorkingDirectory)\terraform.exe --version'
+        filePath: '$(System.DefaultWorkingDirectory)\terraform.exe --version -outputDir $(System.DefaultWorkingDirectory)'
         workingDirectory: $(System.DefaultWorkingDirectory)
     - task: PowerShell@2
       displayName: Terraform fmt
