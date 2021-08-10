@@ -1,0 +1,37 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: windows-latest
+
+stages:
+- stage: download_terraform
+  displayName: download Terraform from Hasicorp website
+  jobs:
+  - job:
+    steps:
+    - task: TerraformInstaller@0
+      inputs:
+        terraformVersion: 'latest'
+    - task: TerraformCLI@0
+      inputs:
+        command: 'version'
+        allowTelemetryCollection: false
+    - task: TerraformCLI@0
+      inputs:
+        command: 'init'
+        backendType: 'azurerm'
+        backendServiceArm: 'manual-sp'
+        ensureBackend: true
+        backendAzureRmResourceGroupName: 'rg-cats-eastus-1'
+        backendAzureRmResourceGroupLocation: 'eastus2'
+        backendAzureRmStorageAccountName: 'catstorageacc1'
+        backendAzureRmStorageAccountSku: 'Standard_LRS'
+        backendAzureRmContainerName: 'tfstates'
+        backendAzureRmKey: 'dev-tfstate'
+        allowTelemetryCollection: true
