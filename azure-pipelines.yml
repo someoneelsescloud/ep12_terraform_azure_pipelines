@@ -24,21 +24,21 @@ stages:
     - task: PowerShell@2
       displayName: Terraform --version
       inputs:
-        filePath: '.\terraform.exe --version'
+        filePath: '$(System.DefaultWorkingDirectory)\terraform.exe --version'
         workingDirectory: $(System.DefaultWorkingDirectory)
     - task: PowerShell@2
       displayName: Terraform fmt
       inputs:
-        filePath: '.\terraform.exe fmt'
+        filePath: '$(System.DefaultWorkingDirectory)\terraform.exe fmt'
         workingDirectory: $(System.DefaultWorkingDirectory)
     - task: PowerShell@2
       displayName: Terraform validate
       inputs:
-        filePath: '.\terraform.exe validate'
+        filePath: '$(System.DefaultWorkingDirectory)\terraform.exe validate'
         workingDirectory: $(System.DefaultWorkingDirectory)
     - task: PowerShell@2
       displayName: Terraform init
       inputs:
-        filePath: '.\terraform.exe init'
+        filePath: '$(System.DefaultWorkingDirectory)\terraform.exe init'
         arguments: -var-file="dev/main.tfvars"
         workingDirectory: $(System.DefaultWorkingDirectory)
