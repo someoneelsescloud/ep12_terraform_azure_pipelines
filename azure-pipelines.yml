@@ -26,18 +26,22 @@ stages:
       inputs:
         script: |
           terraform.exe init
+        workingDirectory: $(System.DefaultWorkingDirectory)
     - task: CmdLine@2
       displayName: Terraform fmt
       inputs:
         script: |
           $(System.DefaultWorkingDirectory)\terraform.exe fmt
+        workingDirectory: $(System.DefaultWorkingDirectory)
     - task: CmdLine@2
       displayName: Terraform init
       inputs:
         script: |
           $(System.DefaultWorkingDirectory)\terraform.exe validate
+        workingDirectory: $(System.DefaultWorkingDirectory)
     - task: CmdLine@2
       displayName: Terraform init
       inputs:
         script: |
-          .\terraform.exe init -var-file="dev/main.tfvars"
+          terraform.exe init -var-file="dev/main.tfvars"
+        workingDirectory: $(System.DefaultWorkingDirectory)
