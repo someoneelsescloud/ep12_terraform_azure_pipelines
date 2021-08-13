@@ -35,3 +35,8 @@ stages:
         backendAzureRmContainerName: 'tfstates'
         backendAzureRmKey: 'dev-tfstate'
         allowTelemetryCollection: true
+    - task: TerraformCLI@0
+      inputs:
+        command: 'plan'
+        environmentServiceName: 'manual-sp'
+        allowTelemetryCollection: false
