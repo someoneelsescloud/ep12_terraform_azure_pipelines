@@ -35,8 +35,10 @@ stages:
         backendAzureRmContainerName: 'tfstates'
         backendAzureRmKey: 'dev-tfstate'
         allowTelemetryCollection: true
+        commandOptions: '-var-file="dev/main.tfvars"'
     - task: TerraformCLI@0
       inputs:
         command: 'plan'
         environmentServiceName: 'manual-sp'
         allowTelemetryCollection: false
+        commandOptions: '-var-file="dev/main.tfvars"'
