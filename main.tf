@@ -1,8 +1,8 @@
 ########### Locals ###########
 locals {
-  rg_name    = "rex-dev-eastus-rg-1"
+  rg_name    = "${var.assetname}-${var.environment}-${var.location}-rg-1"
   res_name   = "${var.assetname}-${var.environment}"
-  sa_name    = "rextorageacc001"
+  sa_name    = "${var.assetname}storageacc001"
 }
 
 resource "random_password" "password" {
