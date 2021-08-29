@@ -2,14 +2,9 @@
 locals {
   name_1     = var.assetname
   locationid = var.location
-  rg_name    = "${var.assetname}-${var.environment}-${local.locationid}"
+  rg_name    = "rex-dev-eastus-rg-1"
   res_name   = "${var.assetname}-${var.environment}"
-  sa_name    = "${local.name_1}sa${random_integer.number.result}"
-}
-
-resource "random_integer" "number" {
-  min = 100
-  max = 999
+  sa_name    = "rextorageacc001"
 }
 
 resource "random_password" "password" {
@@ -19,20 +14,14 @@ resource "random_password" "password" {
 }
 
 ########### Management 1  ###########
-resource "azurerm_resource_group" "resourcegroup_1" {
-  name     = "${local.rg_name}-rg-1"
-  location = local.locationid
-
-  tags = {
-    environment = var.environment
-  }
-
+data "azurerm_resource_group" "resourcegroup_1" {
+  name     = local.rg_name
 }
 
 resource "azurerm_virtual_network" "virtualnetwork_1" {
   name                = "${local.res_name}-vnet-1"
-  location            = azurerm_resource_group.resourcegroup_1.location
-  resource_group_name = azurerm_resource_group.resourcegroup_1.name
+  location            = data.azurerm_resource_group.resourcegroup_1.location
+  resource_group_name = data.azurerm_resource_group.resourcegroup_1.name
   address_space       = ["10.0.0.0/16"]
 
   tags = {
@@ -44,7 +33,7 @@ resource "azurerm_virtual_network" "virtualnetwork_1" {
 resource "azurerm_subnet" "subnet_1" {
   name                 = "${local.res_name}-subnet-1"
   virtual_network_name = azurerm_virtual_network.virtualnetwork_1.name
-  resource_group_name  = azurerm_resource_group.resourcegroup_1.name
+  resource_group_name  = data.azurerm_resource_group.resourcegroup_1.name
   address_prefixes     = ["10.0.1.0/24"]
 
   depends_on = [
@@ -55,8 +44,8 @@ resource "azurerm_subnet" "subnet_1" {
 ########### Log Analytics Workspace ###########
 resource "azurerm_log_analytics_workspace" "law_1" {
   name                = "${local.res_name}-logs-1"
-  location            = azurerm_resource_group.resourcegroup_1.location
-  resource_group_name = azurerm_resource_group.resourcegroup_1.name
+  location            = data.azurerm_resource_group.resourcegroup_1.location
+  resource_group_name = data.azurerm_resource_group.resourcegroup_1.name
   sku                 = "PerGB2018"
   retention_in_days   = 30
 
@@ -69,8 +58,8 @@ resource "azurerm_log_analytics_workspace" "law_1" {
 ########### VMInsights Solution ###########
 resource "azurerm_log_analytics_solution" "vminsights" {
   solution_name         = "VMInsights"
-  location              = azurerm_resource_group.resourcegroup_1.location
-  resource_group_name   = azurerm_resource_group.resourcegroup_1.name
+  location              = data.azurerm_resource_group.resourcegroup_1.location
+  resource_group_name   = data.azurerm_resource_group.resourcegroup_1.name
   workspace_resource_id = azurerm_log_analytics_workspace.law_1.id
   workspace_name        = azurerm_log_analytics_workspace.law_1.name
 
@@ -84,7 +73,7 @@ resource "azurerm_log_analytics_solution" "vminsights" {
 ########### Data sources for Log Analytics Workspace ###########
 resource "azurerm_log_analytics_datasource_windows_event" "app_1" {
   name                = "windows-app-logs"
-  resource_group_name = azurerm_resource_group.resourcegroup_1.name
+  resource_group_name = data.azurerm_resource_group.resourcegroup_1.name
   workspace_name      = azurerm_log_analytics_workspace.law_1.name
   event_log_name      = "Application"
   event_types         = ["error", "information", "warning"]
@@ -96,7 +85,7 @@ resource "azurerm_log_analytics_datasource_windows_event" "app_1" {
 
 resource "azurerm_log_analytics_datasource_windows_event" "sys_1" {
   name                = "windows-sys-logs"
-  resource_group_name = azurerm_resource_group.resourcegroup_1.name
+  resource_group_name = data.azurerm_resource_group.resourcegroup_1.name
   workspace_name      = azurerm_log_analytics_workspace.law_1.name
   event_log_name      = "System"
   event_types         = ["error", "information", "warning"]
@@ -108,7 +97,7 @@ resource "azurerm_log_analytics_datasource_windows_event" "sys_1" {
 
 resource "azurerm_log_analytics_datasource_windows_performance_counter" "cpu_1" {
   name                = "perf-cpu-1"
-  resource_group_name = azurerm_resource_group.resourcegroup_1.name
+  resource_group_name = data.azurerm_resource_group.resourcegroup_1.name
   workspace_name      = azurerm_log_analytics_workspace.law_1.name
   object_name         = "CPU"
   instance_name       = "*"
@@ -122,7 +111,7 @@ resource "azurerm_log_analytics_datasource_windows_performance_counter" "cpu_1" 
 
 resource "azurerm_log_analytics_datasource_windows_performance_counter" "cpu_2" {
   name                = "perf-cpu-2"
-  resource_group_name = azurerm_resource_group.resourcegroup_1.name
+  resource_group_name = data.azurerm_resource_group.resourcegroup_1.name
   workspace_name      = azurerm_log_analytics_workspace.law_1.name
   object_name         = "Processor"
   instance_name       = "_Total"
@@ -136,7 +125,7 @@ resource "azurerm_log_analytics_datasource_windows_performance_counter" "cpu_2" 
 
 resource "azurerm_log_analytics_datasource_windows_performance_counter" "mem_1" {
   name                = "perf-memory-1"
-  resource_group_name = azurerm_resource_group.resourcegroup_1.name
+  resource_group_name = data.azurerm_resource_group.resourcegroup_1.name
   workspace_name      = azurerm_log_analytics_workspace.law_1.name
   object_name         = "Memory"
   instance_name       = "*"
@@ -150,7 +139,7 @@ resource "azurerm_log_analytics_datasource_windows_performance_counter" "mem_1" 
 
 resource "azurerm_log_analytics_datasource_windows_performance_counter" "mem_2" {
   name                = "perf-memory-2"
-  resource_group_name = azurerm_resource_group.resourcegroup_1.name
+  resource_group_name = data.azurerm_resource_group.resourcegroup_1.name
   workspace_name      = azurerm_log_analytics_workspace.law_1.name
   object_name         = "Memory"
   instance_name       = "*"
@@ -164,8 +153,8 @@ data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "keyvault_1" {
   name                        = "${local.res_name}-kv-1"
-  location                    = azurerm_resource_group.resourcegroup_1.location
-  resource_group_name         = azurerm_resource_group.resourcegroup_1.name
+  location                    = data.azurerm_resource_group.resourcegroup_1.location
+  resource_group_name         = data.azurerm_resource_group.resourcegroup_1.name
   enabled_for_disk_encryption = true
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   purge_protection_enabled    = false
@@ -227,25 +216,11 @@ resource "azurerm_key_vault_secret" "workspacekey" {
 
 }
 
-########### Storage Account ###########
-resource "azurerm_storage_account" "storage_1" {
-  name                     = local.sa_name
-  resource_group_name      = azurerm_resource_group.resourcegroup_1.name
-  location                 = azurerm_resource_group.resourcegroup_1.location
-  account_tier             = "Standard"
-  account_replication_type = "GRS"
-
-  tags = {
-    environment = var.environment
-  }
-
-}
-
 ########### Virtual Machine #1 ###########
 resource "azurerm_network_interface" "virtualmachine_1" {
   name                = "${local.res_name}-nic-1"
-  location            = azurerm_resource_group.resourcegroup_1.location
-  resource_group_name = azurerm_resource_group.resourcegroup_1.name
+  location            = data.azurerm_resource_group.resourcegroup_1.location
+  resource_group_name = data.azurerm_resource_group.resourcegroup_1.name
 
   ip_configuration {
     name                          = "${local.res_name}-1"
@@ -266,16 +241,16 @@ resource "azurerm_network_interface" "virtualmachine_1" {
 
 resource "azurerm_public_ip" "virtualmachine_1" {
   name                    = "${local.res_name}-public-vm-nic-1"
-  location                = azurerm_resource_group.resourcegroup_1.location
-  resource_group_name     = azurerm_resource_group.resourcegroup_1.name
+  location                = data.azurerm_resource_group.resourcegroup_1.location
+  resource_group_name     = data.azurerm_resource_group.resourcegroup_1.name
   allocation_method       = "Dynamic"
   idle_timeout_in_minutes = 10
 }
 
 resource "azurerm_windows_virtual_machine" "virtualmachine_1" {
   name                  = "${local.res_name}-vm-1"
-  location              = azurerm_resource_group.resourcegroup_1.location
-  resource_group_name   = azurerm_resource_group.resourcegroup_1.name
+  location              = data.azurerm_resource_group.resourcegroup_1.location
+  resource_group_name   = data.azurerm_resource_group.resourcegroup_1.name
   network_interface_ids = [azurerm_network_interface.virtualmachine_1.id]
   size                  = "Standard_DS1_v2"
   admin_username        = "localadmin"
