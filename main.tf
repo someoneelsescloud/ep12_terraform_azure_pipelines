@@ -1,7 +1,5 @@
 ########### Locals ###########
 locals {
-  name_1     = var.assetname
-  locationid = var.location
   rg_name    = "rex-dev-eastus-rg-1"
   res_name   = "${var.assetname}-${var.environment}"
   sa_name    = "rextorageacc001"
