@@ -11,13 +11,16 @@ stages:
   - job:
     steps:
     - task: TerraformInstaller@0
+      displayName: Install Terraform
       inputs:
         terraformVersion: 'latest'
     - task: TerraformCLI@0
+      displayName: Terraform version
       inputs:
         command: 'version'
         allowTelemetryCollection: false
     - task: TerraformCLI@0
+      displayName: Terraform init
       inputs:
         command: 'init'
         backendType: 'azurerm'
@@ -29,17 +32,19 @@ stages:
         backendAzureRmStorageAccountSku: 'Standard_LRS'
         backendAzureRmContainerName: 'tfstates'
         backendAzureRmKey: 'dev-tfstate'
-        allowTelemetryCollection: true
+        allowTelemetryCollection: false
         commandOptions: '-var-file="dev/main.tfvars"'
     - task: TerraformCLI@0
+      displayName: Terraform plan
       inputs:
         command: 'plan'
         environmentServiceName: 'terraform-sp-63498'
         allowTelemetryCollection: false
         commandOptions: '-var-file="dev/main.tfvars"'
     - task: TerraformCLI@0
+      displayName: Terraform apply
       inputs:
         command: 'apply'
         environmentServiceName: 'terraform-sp-63498'
-        commandOptions: '-auto-approve'
-        allowTelemetryCollection: true
+        commandOptions: '-var-file="dev/main.tfvars"'
+        allowTelemetryCollection: false
