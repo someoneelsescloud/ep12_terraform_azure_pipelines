@@ -37,3 +37,9 @@ stages:
         environmentServiceName: 'terraform-sp-63498'
         allowTelemetryCollection: false
         commandOptions: '-var-file="dev/main.tfvars"'
+    - task: TerraformCLI@0
+      inputs:
+        command: 'apply'
+        environmentServiceName: 'terraform-sp-63498'
+        commandOptions: '-auto-approve'
+        allowTelemetryCollection: true
