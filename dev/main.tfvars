@@ -1,3 +1,3 @@
-assetname   = "cat"
+assetname   = "rex"
 environment = "dev"
 location    = "eastus"
