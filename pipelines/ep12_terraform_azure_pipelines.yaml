@@ -26,9 +26,9 @@ stages:
         backendType: 'azurerm'
         backendServiceArm: 'terraform-sp-63498'
         ensureBackend: true
-        backendAzureRmResourceGroupName: 'rex-dev-eastus-rg-1'
+        backendAzureRmResourceGroupName: 'max-dev-eastus-rg-1'
         backendAzureRmResourceGroupLocation: 'eastus'
-        backendAzureRmStorageAccountName: 'rextorageacc001'
+        backendAzureRmStorageAccountName: 'maxtorageacc001'
         backendAzureRmStorageAccountSku: 'Standard_LRS'
         backendAzureRmContainerName: 'tfstates'
         backendAzureRmKey: 'dev-tfstate'
