@@ -28,7 +28,7 @@ stages:
         ensureBackend: true
         backendAzureRmResourceGroupName: 'max-dev-eastus-rg-1'
         backendAzureRmResourceGroupLocation: 'eastus'
-        backendAzureRmStorageAccountName: 'maxtorageacc001'
+        backendAzureRmStorageAccountName: 'maxstorageacc001'
         backendAzureRmStorageAccountSku: 'Standard_LRS'
         backendAzureRmContainerName: 'tfstates'
         backendAzureRmKey: 'dev-tfstate'
