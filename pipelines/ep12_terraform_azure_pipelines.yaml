@@ -23,9 +23,9 @@ stages:
         backendType: 'azurerm'
         backendServiceArm: 'manual-sp'
         ensureBackend: true
-        backendAzureRmResourceGroupName: 'rg-cats-eastus-1'
-        backendAzureRmResourceGroupLocation: 'eastus2'
-        backendAzureRmStorageAccountName: 'catstorageacc1'
+        backendAzureRmResourceGroupName: 'rex-dev-eastus-rg-1'
+        backendAzureRmResourceGroupLocation: 'eastus'
+        backendAzureRmStorageAccountName: 'rextorageacc001'
         backendAzureRmStorageAccountSku: 'Standard_LRS'
         backendAzureRmContainerName: 'tfstates'
         backendAzureRmKey: 'dev-tfstate'
@@ -34,6 +34,6 @@ stages:
     - task: TerraformCLI@0
       inputs:
         command: 'plan'
-        environmentServiceName: 'manual-sp'
+        environmentServiceName: 'terraform-sp-63498'
         allowTelemetryCollection: false
         commandOptions: '-var-file="dev/main.tfvars"'
