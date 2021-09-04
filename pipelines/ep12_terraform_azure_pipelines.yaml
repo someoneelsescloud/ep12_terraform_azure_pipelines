@@ -36,7 +36,6 @@ stages:
         command: 'validate'
         environmentServiceName: 'terraform-sp-63498'
         allowTelemetryCollection: false
-        commandOptions: '-var-file="dev/main.tfvars"' 
 
 - stage: terraform_plan
   dependsOn: terraform_validate
