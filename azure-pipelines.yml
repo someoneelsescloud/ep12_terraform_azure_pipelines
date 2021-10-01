@@ -5,34 +5,38 @@ pool:
   vmImage: windows-latest
 
 stages:
-- stage: terraform_validate
-  displayName: Prepare Terraform and Validate Code
+- stage: stage_cheat
+  displayName: CHEAT
   jobs:
   - job:
     continueOnError: false
     steps:
-    - task: TerraformInstaller@0
-      displayName: Install Terraform
+    - task: CmdLine@2
+      displayName: CHEAT
       inputs:
-        terraformVersion: 'latest'
-    - task: TerraformCLI@0
-      displayName: Terraform init
+        script: |      
+          echo Hello world
+
+- stage: stage_code
+  displayName: CODE
+  jobs:
+  - job:
+    continueOnError: false
+    steps:
+    - task: CmdLine@2
+      displayName: CODE
       inputs:
-        command: 'init'
-        backendType: 'azurerm'
-        backendServiceArm: 'terraform-sp-63498'
-        ensureBackend: false
-        backendAzureRmResourceGroupName: 'max-dev-eastus-rg-1'
-        backendAzureRmResourceGroupLocation: 'eastus'
-        backendAzureRmStorageAccountName: 'maxstorageacc001'
-        backendAzureRmStorageAccountSku: 'Standard_LRS'
-        backendAzureRmContainerName: 'tfstates'
-        backendAzureRmKey: 'dev2-tfstate'
-        allowTelemetryCollection: false
-        commandOptions: '-var-file="dev/main.tfvars"'
-    - task: TerraformCLI@0
-      displayName: Terraform validate
+        script: |      
+          echo CODE
+
+- stage: stage_tuesdays
+  displayName: TUESDAYS
+  jobs:
+  - job:
+    continueOnError: false
+    steps:
+    - task: CmdLine@2
+      displayName: TUESDAYS
       inputs:
-        command: 'validate'
-        environmentServiceName: 'terraform-sp-63498'
-        allowTelemetryCollection: false
+        script: |      
+          echo TUESDAYS
