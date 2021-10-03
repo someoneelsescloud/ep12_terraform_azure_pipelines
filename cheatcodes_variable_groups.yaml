@@ -1,0 +1,106 @@
+trigger: none
+pr: none
+
+pool:
+  vmImage: windows-latest
+
+stages:
+- stage: terraform_validate
+  displayName: Prepare Terraform and Validate Code
+  jobs:
+  - job:
+    continueOnError: false
+    steps:
+    - task: TerraformInstaller@0
+      displayName: Install Terraform
+      inputs:
+        terraformVersion: 'latest'
+    - task: TerraformCLI@0
+      displayName: Terraform init
+      inputs:
+        command: 'init'
+        backendType: 'azurerm'
+        backendServiceArm: 'terraform-sp-63498'
+        ensureBackend: true
+        backendAzureRmResourceGroupName: 'max-dev-eastus-rg-1'
+        backendAzureRmResourceGroupLocation: 'eastus'
+        backendAzureRmStorageAccountName: 'maxstorageacc001'
+        backendAzureRmStorageAccountSku: 'Standard_LRS'
+        backendAzureRmContainerName: 'tfstates'
+        backendAzureRmKey: 'dev-tfstate'
+        allowTelemetryCollection: false
+        commandOptions: '-var-file="dev/main.tfvars"'
+    - task: TerraformCLI@0
+      displayName: Terraform validate
+      inputs:
+        command: 'validate'
+        environmentServiceName: 'terraform-sp-63498'
+        allowTelemetryCollection: false
+
+- stage: terraform_plan
+  dependsOn: terraform_validate
+  condition: succeeded('terraform_validate')
+  displayName: Prepare Terraform and Validate Code
+  jobs:
+  - job:
+    steps:  
+    - task: TerraformInstaller@0
+      displayName: Install Terraform
+      inputs:
+        terraformVersion: 'latest'
+    - task: TerraformCLI@0
+      displayName: Terraform init
+      inputs:
+        command: 'init'
+        backendType: 'azurerm'
+        backendServiceArm: 'terraform-sp-63498'
+        ensureBackend: true
+        backendAzureRmResourceGroupName: 'max-dev-eastus-rg-1'
+        backendAzureRmResourceGroupLocation: 'eastus'
+        backendAzureRmStorageAccountName: 'maxstorageacc001'
+        backendAzureRmStorageAccountSku: 'Standard_LRS'
+        backendAzureRmContainerName: 'tfstates'
+        backendAzureRmKey: 'dev-tfstate'
+        allowTelemetryCollection: false
+        commandOptions: '-var-file="dev/main.tfvars"'   
+    - task: TerraformCLI@0
+      displayName: Terraform plan
+      inputs:
+        command: 'plan'
+        environmentServiceName: 'terraform-sp-63498'
+        allowTelemetryCollection: false
+        commandOptions: '-var-file="dev/main.tfvars"'
+  
+- stage: terraform_apply
+  condition: succeeded('terraform_plan')
+  dependsOn: terraform_plan
+  displayName: Prepare Terraform and Validate Code
+  jobs:
+  - job:
+    steps:     
+    - task: TerraformInstaller@0
+      displayName: Install Terraform
+      inputs:
+        terraformVersion: 'latest'
+    - task: TerraformCLI@0
+      displayName: Terraform init
+      inputs:
+        command: 'init'
+        backendType: 'azurerm'
+        backendServiceArm: 'terraform-sp-63498'
+        ensureBackend: true
+        backendAzureRmResourceGroupName: 'max-dev-eastus-rg-1'
+        backendAzureRmResourceGroupLocation: 'eastus'
+        backendAzureRmStorageAccountName: 'maxstorageacc001'
+        backendAzureRmStorageAccountSku: 'Standard_LRS'
+        backendAzureRmContainerName: 'tfstates'
+        backendAzureRmKey: 'dev-tfstate'
+        allowTelemetryCollection: false
+        commandOptions: '-var-file="dev/main.tfvars"'   
+    - task: TerraformCLI@0
+      displayName: Terraform apply
+      inputs:
+        command: 'apply'
+        environmentServiceName: 'terraform-sp-63498'
+        commandOptions: '-var-file="dev/main.tfvars"'
+        allowTelemetryCollection: false
