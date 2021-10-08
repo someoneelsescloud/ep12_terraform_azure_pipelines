@@ -70,7 +70,7 @@ stages:
         command: 'plan'
         environmentServiceName: 'terraform-sp-63498'
         allowTelemetryCollection: false
-        commandOptions: '-var-file="dev/main.tfvars"'
+        commandOptions: '-var assetname=$(vg-assetname) -var environment=$(vg-environment) -var location=$(vg-location)'
   
 - stage: terraform_apply
   condition: succeeded('terraform_plan')
@@ -102,5 +102,5 @@ stages:
       inputs:
         command: 'apply'
         environmentServiceName: 'terraform-sp-63498'
-        commandOptions: '-var-file="dev/main.tfvars"'
+        commandOptions: '-var assetname=$(vg-assetname) -var environment=$(vg-environment) -var location=$(vg-location)'
         allowTelemetryCollection: false
