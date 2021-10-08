@@ -4,6 +4,9 @@ pr: none
 pool:
   vmImage: windows-latest
 
+variables:
+ - group: cheatcodes-dev
+
 stages:
 - stage: terraform_validate
   displayName: Prepare Terraform and Validate Code
@@ -22,14 +25,13 @@ stages:
         backendType: 'azurerm'
         backendServiceArm: 'terraform-sp-63498'
         ensureBackend: true
-        backendAzureRmResourceGroupName: 'max-dev-eastus-rg-1'
-        backendAzureRmResourceGroupLocation: 'eastus'
-        backendAzureRmStorageAccountName: 'maxstorageacc001'
+        backendAzureRmResourceGroupName: '$(vg-resourcegroup)'
+        backendAzureRmResourceGroupLocation: '$(vg-location)'
+        backendAzureRmStorageAccountName: '$(vg-storageaccount)'
         backendAzureRmStorageAccountSku: 'Standard_LRS'
         backendAzureRmContainerName: 'tfstates'
-        backendAzureRmKey: 'dev-tfstate'
-        allowTelemetryCollection: false
-        commandOptions: '-var-file="dev/main.tfvars"'
+        backendAzureRmKey: '$(vg-tfkey)'
+        commandOptions: '-var assetname=$(vg-assetname) -var environment=$(vg-environment) -var location=$(vg-location)'
     - task: TerraformCLI@0
       displayName: Terraform validate
       inputs:
@@ -55,14 +57,13 @@ stages:
         backendType: 'azurerm'
         backendServiceArm: 'terraform-sp-63498'
         ensureBackend: true
-        backendAzureRmResourceGroupName: 'max-dev-eastus-rg-1'
-        backendAzureRmResourceGroupLocation: 'eastus'
-        backendAzureRmStorageAccountName: 'maxstorageacc001'
+        backendAzureRmResourceGroupName: '$(vg-resourcegroup)'
+        backendAzureRmResourceGroupLocation: '$(vg-location)'
+        backendAzureRmStorageAccountName: '$(vg-storageaccount)'
         backendAzureRmStorageAccountSku: 'Standard_LRS'
         backendAzureRmContainerName: 'tfstates'
-        backendAzureRmKey: 'dev-tfstate'
-        allowTelemetryCollection: false
-        commandOptions: '-var-file="dev/main.tfvars"'   
+        backendAzureRmKey: '$(vg-tfkey)'
+        commandOptions: '-var assetname=$(vg-assetname) -var environment=$(vg-environment) -var location=$(vg-location)'
     - task: TerraformCLI@0
       displayName: Terraform plan
       inputs:
@@ -89,14 +90,13 @@ stages:
         backendType: 'azurerm'
         backendServiceArm: 'terraform-sp-63498'
         ensureBackend: true
-        backendAzureRmResourceGroupName: 'max-dev-eastus-rg-1'
-        backendAzureRmResourceGroupLocation: 'eastus'
-        backendAzureRmStorageAccountName: 'maxstorageacc001'
+        backendAzureRmResourceGroupName: '$(vg-resourcegroup)'
+        backendAzureRmResourceGroupLocation: '$(vg-location)'
+        backendAzureRmStorageAccountName: '$(vg-storageaccount)'
         backendAzureRmStorageAccountSku: 'Standard_LRS'
         backendAzureRmContainerName: 'tfstates'
-        backendAzureRmKey: 'dev-tfstate'
-        allowTelemetryCollection: false
-        commandOptions: '-var-file="dev/main.tfvars"'   
+        backendAzureRmKey: '$(vg-tfkey)'
+        commandOptions: '-var assetname=$(vg-assetname) -var environment=$(vg-environment) -var location=$(vg-location)'
     - task: TerraformCLI@0
       displayName: Terraform apply
       inputs:
