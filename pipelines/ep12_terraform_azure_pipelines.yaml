@@ -24,7 +24,7 @@ stages:
         ensureBackend: true
         backendAzureRmResourceGroupName: 'max-dev-eastus-rg-1'
         backendAzureRmResourceGroupLocation: 'eastus'
-        backendAzureRmStorageAccountName: 'maxstorageacc001'
+        backendAzureRmStorageAccountName: 'maxstorageacc0011'
         backendAzureRmStorageAccountSku: 'Standard_LRS'
         backendAzureRmContainerName: 'tfstates'
         backendAzureRmKey: 'dev-tfstate'
@@ -57,7 +57,7 @@ stages:
         ensureBackend: true
         backendAzureRmResourceGroupName: 'max-dev-eastus-rg-1'
         backendAzureRmResourceGroupLocation: 'eastus'
-        backendAzureRmStorageAccountName: 'maxstorageacc001'
+        backendAzureRmStorageAccountName: 'maxstorageacc0011'
         backendAzureRmStorageAccountSku: 'Standard_LRS'
         backendAzureRmContainerName: 'tfstates'
         backendAzureRmKey: 'dev-tfstate'
@@ -91,7 +91,7 @@ stages:
         ensureBackend: true
         backendAzureRmResourceGroupName: 'max-dev-eastus-rg-1'
         backendAzureRmResourceGroupLocation: 'eastus'
-        backendAzureRmStorageAccountName: 'maxstorageacc001'
+        backendAzureRmStorageAccountName: 'maxstorageacc0011'
         backendAzureRmStorageAccountSku: 'Standard_LRS'
         backendAzureRmContainerName: 'tfstates'
         backendAzureRmKey: 'dev-tfstate'
